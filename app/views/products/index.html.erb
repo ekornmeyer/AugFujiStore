@@ -1,0 +1,19 @@
+  <div class="row">
+  <div class="large-2 columns">
+    <ul class="side-nav">
+    	<% @categories.each do |category| %>
+    		<% pcount = Product.where("category_id = ?", category.id).count %>
+  		<li><a href="#" id="<%= category.id %>"><%= category.title %> (<%= pcount %>)</a></li>
+  		<% end %>
+	</ul>
+  </div>
+<div class="large-10 columns" id="products_container">
+    <% @products.each do |product| %>
+        <div class="large-4 columns radius prodContainer" style="height: 225px">
+        <a href="<%= product_path(product) %>"><img src=<%= product.default_img_url %> /></a>
+        <h2 class="prodTitle"><%= product.name %> - <span class="prodUnitPrice">$<%= product.unit_price %></span></h2>
+        <%= link_to "View and Customize Item", product, class: 'button label radius' %>
+        </div>
+      <% end %>
+      </div>
+    </div>

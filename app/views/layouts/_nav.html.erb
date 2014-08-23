@@ -1,0 +1,34 @@
+<nav class="top-bar" data-topbar>
+  <ul class="title-area">
+    <li class="name">
+      <h1><%= link_to "Store", root_path %></h1>
+    </li>
+    <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+  </ul>
+
+  <section class="top-bar-section">
+    <ul class="right">
+      <li><%= link_to "Catalog", products_path %></li>
+      <li class="divider"></li>
+      <% if !signed_in? %>
+      <li><%= link_to "Register", register_path %></li>
+      <li class="divider"></li>
+      <li><%= link_to "Sign In", signin_path %></li>
+      <% else %>
+      <li><%= link_to "Shopping Cart", "/shoppingcart" %></li>
+      <li class="divider"></li>
+      <li class="has-dropdown not-click">
+        <a href="#">My Account</a>
+        <ul class="dropdown">
+          <li><%= link_to "Profile", current_customer %></li>
+          <!--<li><%#= link_to "Settings", edit_customer_path(current_customer) %></li>-->
+          <li><%= link_to "Images", customer_assets_path(current_customer) %></li>
+          <li><%= link_to "Orders", customer_orders_path(current_customer) %></li>
+        </ul>
+      </li>
+      <li class="divider"></li>
+      <li><%= link_to "Sign Out", signout_path, method: "delete" %></li>
+      <% end %>
+    </ul>
+  </section>
+</nav>

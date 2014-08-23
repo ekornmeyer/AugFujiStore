@@ -1,0 +1,11 @@
+<div class="row">
+<h4>Your Orders</h4>
+<% @orders.each do |order| %>
+<div class="dashboard-panel">
+<div class="dashTitle"><h3>Order ID: <%= order.fuji_order %></h3></div>
+<% get_order = HTTParty.get("https://preview.webservices.fujifilmesys.com/spa/v2/Orders/#{order.fuji_order}?ApiKey=6dc08434e25b48ec9c0f209ee83eb5aa") %>
+<p>Order Amount: <%= number_to_currency(order.total_price) %></p>
+<p>Status Code: <%= get_order['Order']['OrderDetails']['CurrentStatus']['Description'] %></p>
+</div>
+<% end %>
+</div>

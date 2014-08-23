@@ -1,0 +1,6 @@
+<%= form_for Asset.new, :html => {:multipart => true} do |f| %>
+  <p>
+    <%= f.file_field :file_name %>
+  </p>
+  <p><%= f.submit %></p>
+<% end %>

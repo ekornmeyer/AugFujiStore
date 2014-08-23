@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= content_for?(:title) ? yield(:title) : "foundation-rails" %></title>
+
+    <%= stylesheet_link_tag    "application" %>
+    <%= javascript_include_tag "vendor/modernizr" %>
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+    <%= csrf_meta_tags %>
+  </head>
+
+  <body>
+  	<%= render 'layouts/nav' %>
+  	<%= render 'layouts/header' %>
+      <% flash.each do |key, value| %>
+          <div class="row custom-panel">
+        <div class="alert <%= key %>-panel"><%= value %></div>
+          </div>    
+      <% end %>
+    <%= yield %>
+    <%= render 'layouts/footer' %>
+    <%= javascript_include_tag "application" %>
+  </body>
+</html>

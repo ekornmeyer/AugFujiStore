@@ -1,0 +1,23 @@
+<div class="row">
+<%= form_tag(customer_shipping_address_path(current_customer.id,@sh_address.id), :method => 'patch', :id => 'ef_shp_addr') do %>
+<div class="large-6 columns">
+<%= label_tag :Address_Line_1 %>
+<%= text_field_tag :sh_address1, @sh_address.sh_address1 %>
+<%= label_tag :Address_Line_2 %>
+<%= text_field_tag :sh_address2, @sh_address.sh_address2 %>
+<%= label_tag :City %>
+<%= text_field_tag :sh_city, @sh_address.sh_city %>
+<%= label_tag :State %>
+<%= text_field_tag :sh_state, @sh_address.sh_state %>
+</div>
+<div class="large-6 columns">
+<%= label_tag :ZIP %>
+<%= text_field_tag :sh_zipcode, @sh_address.sh_zipcode %>
+<%= label_tag :Phone %>
+<%= text_field_tag :sh_phone, @sh_address.sh_phone %>
+<%= label_tag :Email %>
+<%= text_field_tag :sh_email, @sh_address.sh_email %>
+<%= submit_tag "Update Address", class: 'tiny button radius' %>
+<% end %>
+</div>
+</div>

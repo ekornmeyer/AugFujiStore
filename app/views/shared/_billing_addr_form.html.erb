@@ -1,0 +1,59 @@
+<div class="row">
+<%= render 'shared/error_messages' %>
+<div class="heading-panel"><h1>Add a new billing address</h1></div>
+    <%= form_for([@customer, @customer.billing_addresses.build], data: {abide: ''}) do |f| %>
+
+	    <div class="large-6 columns">
+      <div class="row">
+      <%= f.label :First_Name %>
+        <%= f.text_field :bi_first_name, required: '' %>
+        <%= content_tag(:small, "This field is required.", class: "error") %>
+        </div>
+        <div class="row">
+      <%= f.label :Last_Name %>
+        <%= f.text_field :bi_last_name, required: '' %>     
+        <%= content_tag(:small, "This field is required.", class: "error") %>
+        </div>
+        <div class="row">
+      <%= f.label :Phone %>
+        <%= f.text_field :bi_phone, required: '' %>   
+        <%= content_tag(:small, "This field is required.", class: "error") %>
+        </div>
+        <div class="row">
+      <%= f.label :Email %>
+        <%= f.text_field :bi_email, required: '', pattern: 'email' %>
+        <%= content_tag(:small, "This field is required.", class: "error") %>
+        </div>                                    
+        </div>
+
+        <div class="large-6 columns">
+        <div class="row">
+      <%= f.label :Address_Line_1 %>
+        <%= f.text_field :bi_address1, required: '' %>
+        <%= content_tag(:small, "This field is required.", class: "error") %>
+        </div>
+        <div class="row">
+        <%= f.label :Address_Line_2 %>
+        <%= f.text_field :bi_address2, required: '' %>       
+        <%= content_tag(:small, "This field is required.", class: "error") %> 
+        </div>
+        <div class="row">
+          <%= f.label :City %>
+      	  <%= f.text_field :bi_city, required: '' %>	  
+          <%= content_tag(:small, "This field is required.", class: "error") %>
+          </div>
+          <div class="row">
+     	  <%= f.label :State %>
+      	  <%= f.text_field :bi_state, required: '' %>
+          <%= content_tag(:small, "This field is required.", class: "error") %>
+          </div>
+          <div class="row">
+      	  <%= f.label :ZIP %>
+      	  <%= f.text_field :bi_zipcode, required: '' %>	 
+          <%= content_tag(:small, "This field is required.", class: "error") %>
+          </div>
+		</div>
+		<%= f.submit "Save changes", class: "cEdit-button" %>
+	    <% end %>
+
+</div>

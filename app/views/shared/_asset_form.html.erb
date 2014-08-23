@@ -1,0 +1,14 @@
+<%= form_for ([@customer, @customer.assets.build]), :html => {:multipart => true} do |f| %>
+	<%= f.file_field :file_name, :style => 'display: none' %>
+	<div class="row collapse">
+	<div class="large-6 columns">
+	<input type="text" placeholder="Choose a file" id="assetCover">
+	</div>
+	<div class="large-2 columns">
+    <a href="#" class="button postfix" onclick="$('input[id=asset_file_name]').click();">Browse</a>
+    </div>
+    <div class="large-4 columns">
+    </div>
+    </div>
+	<div class="row"><%= f.submit "Upload", :class => 'button small radius' %></div>
+<% end %>

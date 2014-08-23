@@ -1,0 +1,38 @@
+<div class="row">
+<div class="heading-panel"><h1>Manage your images</h1></div>
+</div>
+
+<% assetcount = 0 %>
+
+	<% if @assets.empty? %>
+		<div class="row"><h3>You don't have any uploaded images.</h3></div>
+	<% else %>
+		<% @assets.each_slice(3) do |slice| %>
+			<div class="row">
+			<br />
+				<% slice.each do |asset| %>
+				<% assetcount += 1 %>
+
+				<div class="assetColumn text-center large-4 columns">
+				<a href="#" class="asset-toolbar"><%= image_tag asset.file_name.url(:thumb).to_s %></a>
+				<div id="asset-toolbar-options<%= assetcount %>" style="display: none;">
+	  			<a href="#" data-reveal-id="myModal<%= assetcount %>" data-reveal><span data-tooltip class="has-top tip-top radius" title="Enlarge Image"><i class="icon-zoom-in"></i></span></a>
+	  			<%= link_to [current_customer, asset], method: :delete do %>
+	  				<span data-tooltip class="has-top tip-top radius" title="Delete Image"><i class="icon-remove"></i></span>
+	  			<% end %>
+				</div>
+
+				<div id="myModal<%= assetcount %>" class="reveal-modal" data-reveal>
+				<%= image_tag asset.file_name.to_s %>
+				</div>
+
+				</div>
+				<% end %>
+			</div>
+		<% end %>
+	<% end %>
+
+<div class="row">
+<br />
+<%= link_to 'Upload new Image', new_customer_asset_path, :class => 'button radius' %>
+</div>

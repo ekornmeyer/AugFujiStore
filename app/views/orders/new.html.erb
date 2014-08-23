@@ -1,0 +1,126 @@
+<div class="row">
+<h2>Checkout</h2>
+<dl class="accordion" data-accordion>
+  <dd>
+    <a href="#panel1">Review Your Items</a>
+    <div id="panel1" class="content active">
+	<table width="100%" id="checkout_container">
+	  <thead>
+	    <tr>
+	      <th>Thumbnail</th>
+	      <th>Product Code</th>
+	      <th>Product Name</th>
+	      <th>Quantity</th>
+	      <th>Unit Price</th>          
+	      <th>Sub Total</th> 
+	    </tr>
+	  </thead>
+	  <tbody>
+	<% @db_lines.each do |line| %>
+	<% product = Product.find_by_product_code(line['ProductCode']) %>
+    <tr>
+      <td><%= image_tag "#{line['preview_url']}&maxSize=135" %></td>
+      <td><%= line['ProductCode'] %></td>
+      <td><%= product.name %></td>
+      <td><%= line['Quantity'] %></td>
+      <td><%= number_to_currency(line['UnitPrice']) %></td>
+      <td><%= number_to_currency(line['Quantity'] * line['UnitPrice']) %>
+    </tr>	
+	<% end %>
+    <tr>
+      <td colspan="6"><%= link_to "Modify Items","/shoppingcart", class: 'tiny button radius' %></td>
+    </tr>
+  </tbody>
+</table>	
+    </div>
+  </dd>
+  <dd>
+    <a href="#panel2">Shipping and Billing Address</a>
+    <div id="panel2" class="content">
+    <div class="row">
+    <div class="large-6 columns">
+<% if @shipping_addresses.empty? %>
+<p>You don't have any shipping addresses.</p>
+<div class="row clearfix"><%= link_to "Add New Shipping Address", '#', "data-reveal-id" => "modShAddr", :class => 'tiny success label radius left' %></div>
+<% else %>
+<div class="row">
+<br>
+<%= collection_select(:sh_addresses, 0, @shipping_addresses, :id, :sh_full_address, {include_blank: 'Select a Shipping Address to Use'}) %>
+<% if !@get_order['Order']['ShipTo'].nil? %>
+<blockquote>
+  <%= @get_order['Order']['ShipTo']['FirstName'] %> <%= @get_order['Order']['ShipTo']['LastName'] %><br>
+  <%= @get_order['Order']['ShipTo']['Phone'] %> | <%= @get_order['Order']['ShipTo']['Email'] %><br>
+  <%= @get_order['Order']['ShipTo']['Address']['Line1'] %><br>
+  <%= @get_order['Order']['ShipTo']['Address']['Line2'] %><br>
+  <%= @get_order['Order']['ShipTo']['Address']['City'] %>, <%= @get_order['Order']['ShipTo']['Address']['State'] %> <%= @get_order['Order']['ShipTo']['Address']['PostalCode'] %>
+</blockquote>
+<% end %>
+</div>
+<% end %>
+</div>
+<div class="large-6 columns">
+<% if @billing_addresses.empty? %>
+<p>You don't have any billing addresses.</p>
+<div class="row clearfix"><%= link_to "Add New Billing Address", '#', "data-reveal-id" => "modBiAddr", :class => 'tiny success label radius left' %></div>
+<% else %>
+<div class="row">
+<br>
+<%= collection_select(:bi_addresses, 0, @billing_addresses, :id, :bi_full_address, {include_blank: 'Select a Billing Address to Use'}) %>
+<% if !@get_order['Order']['BillTo'].nil? %>
+<blockquote>
+  <%= @get_order['Order']['BillTo']['FirstName'] %> <%= @get_order['Order']['BillTo']['LastName'] %><br>
+  <%= @get_order['Order']['BillTo']['Phone'] %> | <%= @get_order['Order']['BillTo']['Email'] %><br>
+  <%= @get_order['Order']['BillTo']['Address']['Line1'] %><br>
+  <%= @get_order['Order']['BillTo']['Address']['Line2'] %><br>
+  <%= @get_order['Order']['BillTo']['Address']['City'] %>, <%= @get_order['Order']['BillTo']['Address']['State'] %> <%= @get_order['Order']['BillTo']['Address']['PostalCode'] %>
+</blockquote>
+<% end %>
+</div>
+<% end %>
+    </div>    
+    </div>
+  </dd>
+  <dd>
+    <a href="#panel3">Payment and Submit</a>
+    <div id="panel3" class="content">
+    <div class="row">
+    <div class="large-6 columns">
+    <h4>Credit Card Info</h4>
+    <%= form_tag(customer_orders_path(current_customer)) do %>
+    <%= label_tag(:Credit_Card_Number) %>
+    <%= text_field_tag(:Credit_Card_Number) %>
+    <div class="large-4 columns">
+    <%= label_tag(:Expiration_Month) %>
+    <%= text_field_tag(:Expiration_Month, nil, placeholder: "Month: MM", maxlength: 2) %>
+    </div>
+    <div class="large-4 columns">
+    <%= label_tag(:Expiration_Year) %>
+    <%= text_field_tag(:Expiration_Year, nil, placeholder: "Year: YYYY", maxlength: 4) %>
+    </div>
+    <div class="large-4 columns">
+    <%= label_tag(:Security_Code) %>
+    <%= text_field_tag(:Security_Code) %>
+    </div>
+    <%= submit_tag "Submit Your Order", class: "button radius success" %>  
+    <% end %>
+    </div>
+    <div class="large-6 columns">
+    <h4>Review Your Order</h4>
+    <blockquote>
+    <div><strong>Total Item Price: </strong><%= number_to_currency(@get_order['Order']['OrderDetails']['OrderTotal']['TotalItemPrice']) %></div>
+    <div><strong>Total Tax: </strong><%= number_to_currency(@get_order['Order']['OrderDetails']['OrderTotal']['TotalTax']) %></div>
+    <div><strong>Total Shipping: </strong><%= number_to_currency(@get_order['Order']['OrderDetails']['OrderTotal']['TotalShipping']) %></div>
+    <div><strong>Total Price: </strong><%= number_to_currency(@get_order['Order']['OrderDetails']['OrderTotal']['TotalPrice']) %></div>
+    </blockquote>
+    </div>
+    </div>    
+    </div>
+  </dd>
+</dl>
+<div id="modShAddr" class="reveal-modal" data-reveal>
+<%= render 'shared/shipping_addr_form' %>
+</div>
+<div id="modBiAddr" class="reveal-modal" data-reveal>
+<%= render 'shared/billing_addr_form' %>
+</div>
+</div>

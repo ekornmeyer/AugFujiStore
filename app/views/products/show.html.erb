@@ -1,0 +1,61 @@
+<div class="row">
+<div class="large-6 columns">
+
+<img src="<%= @product.default_img_url %>" />
+<% if !session[:cookies_orderid].nil? && @get_lines['Status']['Code'] == 200 %>
+
+<% @last_line = @get_lines['Lines'].last %>
+<% order_id = "#{session[:cookies_orderid]}" %>
+<% preview_url = "#{@last_line['LinePreviewThumbnail']}&maxSize=135" %>
+<% product_code = "#{@last_line['ProductCode']}" %>
+<% line_number = "#{@last_line['LineNumber']}" %>
+<% unit_price = "#{@last_line['UnitPrice']}" %>
+<% page_number = "#{@last_line['Pages'][0]['PageNumber']}" %>
+<% asset_number = "#{@last_line['Pages'][0]['Assets'][0]['AssetNumber']}" %>
+<% name = "#{@last_line['Pages'][0]['Assets'][0]['Name']}" %>
+<% hi_res_image = "#{@last_line['Pages'][0]['Assets'][0]['HiResImage']}" %>
+<% crop_mode = "#{@last_line['Pages'][0]['Assets'][0]['CropMode']}" %>
+
+<% if product_code == @product.product_code %>
+<%= image_tag preview_url %>
+<% end %>
+<% end %>
+
+<h3><span class="product_price"><%= number_to_currency(@product.unit_price) %></span> - <%= @product.name %></h3>
+<p><%= @product.description %></p>
+
+<% if @get_lines['Status']['Code'] == 200 %>
+
+<%= form_tag({:action => :create, :controller => 'order_lines'}, :params => [:Quantity, :line_number]) do %>
+  <%= label_tag(:Quantity, "Quantity:") %>
+  <%= text_field_tag(:Quantity, '1') %>
+  <%= hidden_field_tag(:order_id, order_id) %>
+  <%= hidden_field_tag(:preview_url, preview_url) %>
+  <%= hidden_field_tag(:ProductCode, product_code) %>
+  <%= hidden_field_tag(:LineNumber, line_number) %>
+  <%= hidden_field_tag(:UnitPrice, unit_price) %>
+  <%= hidden_field_tag(:PageNumber, page_number) %>
+  <%= hidden_field_tag(:AssetNumber, asset_number) %>
+  <%= hidden_field_tag(:Name, name) %>
+  <%= hidden_field_tag(:HiResImage, hi_res_image) %>
+  <%= hidden_field_tag(:CropMode, crop_mode) %>
+  <%= submit_tag("Add to Cart", class: 'success small button radius') %>
+<% end %>
+
+<% end %>
+</div>
+<div class="large-6 columns">
+<% if signed_in? %>
+<h4>Your Images</h4>
+<div class="dashboard-panel">
+<% @assets.each do |asset| %>
+<!--<a href="#" onclick="window.location = '/asset_crop?prod_id=<%= @product.id %>&asset_id=<%= asset.id %>'"><%#= image_tag asset.file_name.url(:dashboard).to_s %></a>-->
+<a href="#" onclick="window.location = '/image_process?prod_id=<%= @product.id %>&asset_id=<%= asset.id %>'"><%= image_tag asset.file_name.url(:dashboard).to_s %></a>
+<% end %>
+</div>
+<p>Click an uploaded image to create a preview</p>
+<% else %>
+You don't have any images.
+<% end %>
+</div>
+</div>

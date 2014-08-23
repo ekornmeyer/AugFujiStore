@@ -1,0 +1,21 @@
+<div class="row">
+<div class="heading-panel"><h1>Sign in</h1></div>
+<div class="large-8 columns">
+
+    <%= form_for(:session, url: sessions_path) do |f| %>
+
+      <%= f.label :email %>
+      <%= f.text_field :email %>
+
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+
+      <%= f.submit "Sign in", class: "button radius" %>
+    <% end %>
+	</div>
+	<div class="large-4 columns text-right">
+    <h4>Still need to register?</h4>
+    <p>Creating an account only takes a second and is required to complete your purchase.</p>
+    <%= link_to "Sign up now!", register_path, :class => 'button radius small' %>
+    </div>
+</div>

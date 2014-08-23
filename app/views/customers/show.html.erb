@@ -1,0 +1,111 @@
+<div id="custDashboard">
+<div class="row"><h2>My Dashboard</h2></div>
+
+<div class="row dashboard-panel">
+<div class="dashTitle"><h3>Image Assets</h3></div>
+<div class="clearfix"><%= link_to "Upload New Image", '#', "data-reveal-id" => "modAsset", :class => 'tiny success label radius left' %></div>
+<% assetcount = 0 %>
+	<% if @assets.empty? %>
+		<p>You don't have any uploaded images.</p>
+	<% else %>
+		<% @assets.each_slice(3) do |slice| %>
+			<div class="row">
+			<br />
+				<% slice.each do |asset| %>
+				<% assetcount += 1 %>
+
+				<div class="assetColumn text-center large-4 columns">
+				<a href="#" class="asset-toolbar"><%= image_tag asset.file_name.url(:thumb).to_s %></a>
+				<div id="asset-toolbar-options<%= assetcount %>" style="display: none;">
+	  			<a href="#" data-reveal-id="myModal<%= assetcount %>" data-reveal><span data-tooltip class="has-top tip-top radius" title="Enlarge Image"><i class="icon-zoom-in"></i></span></a>
+	  			<%= link_to [current_customer, asset], method: :delete do %>
+	  				<span data-tooltip class="has-top tip-top radius" title="Delete Image"><i class="icon-remove"></i></span>
+	  			<% end %>
+				</div>
+
+				<div id="myModal<%= assetcount %>" class="reveal-modal" data-reveal>
+				<%= image_tag asset.file_name.to_s %>
+				</div>
+
+				</div>
+				<% end %>
+			</div>
+		<% end %>
+	<% end %>
+</div>
+<div class="row">
+<div class="dashboard-panel clearfix">
+<div class="dashTitle"><h3>Shipping and Billing Addresses</h3></div>
+<div class="large-6 columns">
+<div class="row clearfix"><%= link_to "Add New Shipping Address", '#', "data-reveal-id" => "modShAddr", :class => 'tiny success label radius left' %></div>
+<% if @shipping_addresses.empty? %>
+<p>You don't have any shipping addresses.</p>
+<% else %>
+<div class="row">
+<br>
+<%= collection_select(:sh_addresses, 0, @shipping_addresses, :id, :sh_full_address, {include_blank: 'Select a Shipping Address to Edit'}) %>
+<div id="e_shipping_addresses">
+
+</div>   
+</div>
+<% end %>
+</div>
+<div class="large-6 columns">
+<div class="row clearfix"><%= link_to "Add New Billing Address", '#', "data-reveal-id" => "modBiAddr", :class => 'tiny success label radius left' %></div>
+<% if @billing_addresses.empty? %>
+<p>You don't have any billing addresses.</p>
+<% else %>
+<div class="row">
+<br>
+<%= collection_select(:bi_addresses, 0, @billing_addresses, :id, :bi_full_address, include_blank: 'Select a Billing Address to Edit') %>
+<div id="e_billing_addresses">
+
+</div> 
+</div>
+<% end %>
+</div>
+</div>
+
+</div>
+
+<div class="row dashboard-panel">
+<div class="dashTitle"><h3>Orders</h3></div>
+<% if !@orders.nil? %>
+<% @orders.each do |order| %>
+<% get_order = HTTParty.get("https://preview.webservices.fujifilmesys.com/spa/v2/Orders/#{order.fuji_order}?ApiKey=6dc08434e25b48ec9c0f209ee83eb5aa") %>
+<% checkout_date = Date.parse("#{get_order['Order']['OrderDetails']['CheckoutDateTime']}").strftime("%m-%d-%Y") %>
+<% eta_date = Date.parse("#{get_order['Order']['OrderDetails']['ETA']}").strftime("%m-%d-%Y") %>
+<div class="row">
+<div class="large-4 columns">
+<ul>
+<li><span class="order-label">Order ID:</span> <%= order.fuji_order %></li>
+<li><span class="order-label">Date:</span> <%= checkout_date %></li>
+<li><span class="order-label">ETA:</span> <%= eta_date %></li>
+</ul>
+</div>
+<div class="large-4 columns">
+<ul>
+<li><span class="order-label">Total Item Price:</span> <%= number_to_currency(get_order['Order']['OrderDetails']['OrderTotal']['TotalItemPrice']) %></li>
+<li><span class="order-label">Total Tax:</span> <%= number_to_currency(get_order['Order']['OrderDetails']['OrderTotal']['TotalTax']) %></li>
+<li><span class="order-label">Total Shipping:</span> <%= number_to_currency(get_order['Order']['OrderDetails']['OrderTotal']['TotalShipping']) %></li>
+<li><span class="order-label">Total Order:</span> <%= number_to_currency(get_order['Order']['OrderDetails']['OrderTotal']['TotalPrice']) %></li>
+</ul>
+</div>
+<div class="large-4 columns">
+<%= get_order %>
+</div>
+</div>
+<% end %>
+<% end %>
+</div>
+
+<div id="modAsset" class="reveal-modal" data-reveal>
+<%= render 'shared/asset_form' %>
+</div>
+<div id="modShAddr" class="reveal-modal" data-reveal>
+<%= render 'shared/shipping_addr_form' %>
+</div>
+<div id="modBiAddr" class="reveal-modal" data-reveal>
+<%= render 'shared/billing_addr_form' %>
+</div>
+</div>

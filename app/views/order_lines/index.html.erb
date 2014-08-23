@@ -1,0 +1,63 @@
+<div class="row">
+<h2>Shopping Cart</h2>
+<%= form_tag({:action => :update_quantity}, data: {abide: ''}) do %>
+<table width="100%" id="shopping_cart_container">
+  <thead>
+    <tr>
+      <th>Remove</th>    
+      <th>Thumbnail</th>
+      <th>Product Code</th>
+      <th>Product Name</th>
+      <th>Quantity</th>
+      <th>Unit Price</th>          
+      <th>Sub Total</th>
+    </tr>
+  </thead>
+  <tbody>
+<% if !signed_in? %>
+<tr>
+<td colspan="7">Your shopping cart is empty. Please sign in to start!</td>
+</tr>
+<% else %>
+<% if session[:cookies_orderid].nil? %>
+<tr>
+<td colspan="7">Your shopping cart is empty.</td>
+</tr>
+<% else %>
+<% if !session[:cookies_orderid].nil? && @db_lines.count == 0 %>
+<tr>
+<td colspan="7">Your shopping cart is empty.</td>
+</tr>
+<% else %>
+<% update_order %>
+<% @id_array = [] %>
+<% @db_lines.each do |line| %>
+<% product = Product.find_by_product_code(line['ProductCode']) %>
+<% @id_array << line['id'] %>
+    <tr>
+      <td><%= link_to "X", order_line_path(line['id']), method: 'delete', class: 'tiny button radius' %></td>    
+      <td><%= image_tag "#{line['preview_url']}&maxSize=135" %></td>
+      <td><%= line['ProductCode'] %></td>
+      <td><%= product.name %></td>
+      <td><%= number_field_tag "updated_quantity#{line['id']}", "#{line['Quantity']}", required: '', pattern: 'integer', min: '1', max: '100', step: '1' %><%= content_tag(:small, "Please enter a number.", class: "error") %></td>
+      <td><%= number_to_currency(line['UnitPrice']) %></td>
+      <td><%= number_to_currency(line['Quantity'] * line['UnitPrice']) %></td>
+    </tr>
+<% end %> 
+    <tr>
+    <td colspan="7" class="text-right">
+    <%= hidden_field_tag :ids_to_update, @id_array.join(',') %>    
+    <ul class="button-group radius right" id="shopping_cart_bar">
+    <li><%= link_to "Continue Shopping", products_path, :class => "button tiny" %></li>
+    <li><%= submit_tag("Update Quantity", :class => 'button tiny') %></li>
+    <li><%= link_to "Checkout", '/checkout', :class => 'success button tiny' %></li>
+    </ul>
+    <% end %>
+    </td>
+    </tr>
+<% end %>
+<% end %>
+<% end %>
+  </tbody>
+</table>
+</div>

@@ -1,0 +1,23 @@
+<div class="row">
+<%= form_tag(customer_billing_address_path(current_customer.id,@bi_address.id), :method => 'patch', :id => 'ef_bill_addr') do %>
+<div class="large-6 columns">
+<%= label_tag :Address_Line_1 %>
+<%= text_field_tag :bi_address1, @bi_address.bi_address1 %>
+<%= label_tag :Address_Line_2 %>
+<%= text_field_tag :bi_address2, @bi_address.bi_address2 %>
+<%= label_tag :City %>
+<%= text_field_tag :bi_city, @bi_address.bi_city %>
+<%= label_tag :State %>
+<%= text_field_tag :bi_state, @bi_address.bi_state %>
+</div>
+<div class="large-6 columns">
+<%= label_tag :ZIP %>
+<%= text_field_tag :bi_zipcode, @bi_address.bi_zipcode %>
+<%= label_tag :Phone %>
+<%= text_field_tag :bi_phone, @bi_address.bi_phone %>
+<%= label_tag :Email %>
+<%= text_field_tag :bi_email, @bi_address.bi_email %>
+<%= submit_tag "Update Address", class: 'tiny button radius' %>
+<% end %>
+</div>
+</div>
